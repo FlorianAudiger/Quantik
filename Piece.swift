@@ -17,10 +17,22 @@ protocol TPiece {
 
 // TYPE
 struct Piece : TPiece {
-/*
-	init(couleur : Couleur, forme : Forme){}
-	func couleur() -> Couleur {}
-	func forme() -> Forme {}
-*/
+	
+	private var _couleurP : Couleur
+
+	private var _forme : Forme
+
+	init(couleur : Couleur, forme : Forme){
+		self._couleurP = couleur
+		self._forme = forme 
+	}
+
+	func couleur() -> Couleur {
+		return self._couleurP
+	}
+	func forme() -> Forme {
+		return self._forme
+	}
+
 }
 	
