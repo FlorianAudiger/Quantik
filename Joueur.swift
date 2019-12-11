@@ -37,24 +37,24 @@ struct Joueur : TJoueur{
 
 		self._couleurJ = couleur
 
-		var Sp1 = TPiece(self._couleurJ, Forme.Sphere)
-		var Sp2 = TPiece(self._couleurJ, Forme.Sphere)
+		var Sp1 = Piece(couleur: self._couleurJ, forme: Forme.Sphere)
+		var Sp2 = Piece(couleur: self._couleurJ, forme: Forme.Sphere)
 
-		var Cu1 = TPiece(self._couleurJ, Forme.Cube)
-		var Cu2 = TPiece(self._couleurJ, Forme.Cube)
+		var Cu1 = Piece(couleur: self._couleurJ, forme: Forme.Cube)
+		var Cu2 = Piece(couleur: self._couleurJ, forme: Forme.Cube)
 
-		var Co1 = TPiece(self._couleurJ, Forme.Cone)
-		var Co2 = TPiece(self._couleurJ, Forme.Cone)
+		var Co1 = Piece(couleur: self._couleurJ, forme: Forme.Cone)
+		var Co2 = Piece(couleur: self._couleurJ, forme: Forme.Cone)
 
-		var Cy1 = TPiece(self._couleurJ, Forme.Cylindre)
-		var Cy2 = TPiece(self._couleurJ, Forme.Cylindre)
+		var Cy1 = Piece(couleur: self._couleurJ, forme: Forme.Cylindre)
+		var Cy2 = Piece(couleur: self._couleurJ, forme: Forme.Cylindre)
 
 		_listePiece = [Sp1,Sp2,Cu1,Cu2,Co1,Co2,Cy1,Cy2]
 
 	}
 
 	func couleur() -> Couleur {
-		return self._couleur	
+		return self._couleurJ	
 	}
 
 	func getPiecesAvailable() -> [TPiece] {
