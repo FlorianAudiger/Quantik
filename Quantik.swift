@@ -74,14 +74,61 @@ protocol TQuantik {
 
 //TYPE
 struct Quantik : TQuantik {
-/*
-	init()	
+
+	private var _grid : [[Piece?]]
+
+	// _plateau[row][column]
+
+	init()
+	{
+		self._grid = [[Piece?]](repeating:[Piece?](repeating:nil,count:4),count:4)
+	}
 
 	func isOccupied(row : Int, column : Int) -> Bool
+	{
+		var res : Bool
+		if let piecePres = self._grid[row][column] 
+		{
+			res = true 
+		} else {
+			res = false
+		}
+		return res
+	}
 
-	func isAlreadyInRow(piece :TPiece, row : Int) -> Bool
+	func isAlreadyInRow(piece :TPiece, row : Int) throws -> Bool
+	{
+		var columnT : Int = 0
+		var res : Bool = false
+		if row<0 || row>3 
+		{
+			return fatalError("row en dehors de la grille")
+		} else {
+			while columnT<4 && !res {
+				if let pieceTestee = _grid[row][columnT] {
+					res = (pieceTestee.forme() == piece.forme())
+				}
+			}
+		}
+	return res
+	}
 
 	func isAlreadyInColumn(piece :TPiece, column : Int) -> Bool
+	{
+		var rowT : Int = 0
+		var res : Bool = false
+		if column<0 || column>3 
+		{
+			return fatalError("column en dehors de la grille")
+		} else {
+			while rowT<4 && !res {
+				if let pieceTestee = _grid[rowT][column] {
+					res = (pieceTestee.forme() == piece.forme())
+				}
+			}
+		}
+	return res
+	}
 
 	func isAlreadyInRegion(piece :TPiece, region : Int) -> Bool
 
