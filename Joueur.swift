@@ -34,21 +34,45 @@ struct Joueur : TJoueur{
 
 	//FONCTION
 	init(couleur : Couleur) {
+
 		self._couleurJ = couleur
+
+		var Sp1 = Piece(couleur: self._couleurJ, forme: Forme.Sphere)
+		var Sp2 = Piece(couleur: self._couleurJ, forme: Forme.Sphere)
+
+		var Cu1 = Piece(couleur: self._couleurJ, forme: Forme.Cube)
+		var Cu2 = Piece(couleur: self._couleurJ, forme: Forme.Cube)
+
+		var Co1 = Piece(couleur: self._couleurJ, forme: Forme.Cone)
+		var Co2 = Piece(couleur: self._couleurJ, forme: Forme.Cone)
+
+		var Cy1 = Piece(couleur: self._couleurJ, forme: Forme.Cylindre)
+		var Cy2 = Piece(couleur: self._couleurJ, forme: Forme.Cylindre)
+
+		_listePiece = [Sp1,Sp2,Cu1,Cu2,Co1,Co2,Cy1,Cy2]
+
 	}
 
 	func couleur() -> Couleur {
-		return self._couleur	
+		return self._couleurJ	
 	}
 
 	func getPiecesAvailable() -> [TPiece] {
 		return self._listePiece
 	}
-/*
-	func isPieceAvailable(piece :TPiece) -> Bool {}
 
-	mutating func piecePlayed(piece :TPiece) {}
-*/
+	func isPieceAvailable(piece :TPiece) -> Bool {
+		return (self._listePiece.contains(piece))
+	}
+
+	mutating func piecePlayed(piece :TPiece){
+
+	var i : Int = 0
+	while(_listePiece[i].forme() != piece.forme()){
+		i = i + 1
+	}
+	_listePiece.remove(at: i)
+	}
 }
 	
 	
