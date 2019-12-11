@@ -34,16 +34,16 @@ struct Joueur : TJoueur{
 
 	//FONCTION
 	init(couleur : Couleur) {
-	self._couleurJ = couleur
+		self._couleurJ = couleur
 	}
 
 	func couleur() -> Couleur {
-	return self._couleur	
+		return self._couleur	
 	}
 
 	func getPiecesAvailable() -> [TPiece] {
-	return self._listePiece
-}
+		return self._listePiece
+	}
 /*
 	func isPieceAvailable(piece :TPiece) -> Bool {}
 
