@@ -29,18 +29,22 @@ protocol TJoueur {
 // TYPE
 struct Joueur : TJoueur{
 	//PROPRIETE
-	private var couleur : Couleur
+	private var _couleurJ : Couleur
+	private var _listePiece : [TPiece]
 
 	//FONCTION
 	init(couleur : Couleur) {
-	self.couleur = couleur
+	self._couleurJ = couleur
 	}
 
+	func couleur() -> Couleur {
+	return self._couleur	
+	}
+
+	func getPiecesAvailable() -> [TPiece] {
+	return self._listePiece
+}
 /*
-	func couleur() -> Couleur {}
-
-	func getPiecesAvailable() -> [TPiece] {}
-
 	func isPieceAvailable(piece :TPiece) -> Bool {}
 
 	mutating func piecePlayed(piece :TPiece) {}
