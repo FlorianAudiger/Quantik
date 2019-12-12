@@ -140,10 +140,16 @@ struct Quantik : TQuantik {
 
 	func isAbleToPlay(joeuur : TJoueur) -> Bool
 
-	func getPieceGrille(row : Int, column : Int) -> TPiece?
+	func getPieceGrille(row : Int, column : Int) -> TPiece? {
+		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
+			return self.grille[row][column]
+		}
+		fatalError("Préconditions non respectées : 0 <= row <= 3 et 0 <= column <= 3")
+	}
+
 
 	func gameOver(joueur1 : TJoueur, joueur2 : TJoueur) -> Int
-*/
+
 }
 
 
