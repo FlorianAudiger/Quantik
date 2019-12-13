@@ -139,7 +139,7 @@ struct Quantik : TQuantik {
 	}
 
 	func isPlayable(joueur : TJoueur, piece :TPiece, row : Int, column : Int) -> Bool {
-	return (!isOccupied(row,column) && !isAlreadyInRow(piece,row) && !isAlreadyInColumn(piece,column) && !isAlreadyInRegion(piece,regionFromXY(row,column)) && joueur.isPieceAvailable(piece))
+	return (!isOccupied(row: row,column: column) && !isAlreadyInRow(piece: piece,row: row) && !isAlreadyInColumn(piece: piece,column: column) && !isAlreadyInRegion(piece: piece,region: regionFromXY(row: row,column: column)) && joueur.isPieceAvailable(piece: piece))
 
 	mutating func playPiece(piece :TPiece, row : Int, column : Int) {
 		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
@@ -147,7 +147,7 @@ struct Quantik : TQuantik {
 			self.grille[row][column] = piece
 
 			//On l'enlève de la collection du Joueur
-			joueur.piecePlayed(piece)
+			joueur.piecePlayed(piece: piece)
 		}
 		fatalError("Préconditions non respectées : 0 <= row <= 3 et 0 <= column <= 3")
 	
