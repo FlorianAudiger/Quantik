@@ -12,7 +12,6 @@ protocol TPiece {
 	//renvoie la Forme de la Piece
 	func forme() -> Forme 
 }
-
 //si les pré-conditions ne sont pas validées, faire planter le programme
 
 // TYPE
