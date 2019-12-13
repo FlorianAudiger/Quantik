@@ -138,11 +138,43 @@ struct Quantik : TQuantik {
 		if 
 	}
 
-	func isPlayable(joueur : TJoueur, piece :TPiece, row : Int, column : Int) -> Bool
+	func isPlayable(joueur : TJoueur, piece :TPiece, row : Int, column : Int) -> Bool {
+	return (!isOccupied(row,column) && !isAlreadyInRow(piece,row) && !isAlreadyInColumn(piece,column) && !isAlreadyInRegion(piece,regionFromXY(row,column)) && joueur.isPieceAvailable(piece))
 
-	mutating func playPiece(piece :TPiece, row : Int, column : Int)
+	mutating func playPiece(piece :TPiece, row : Int, column : Int) {
+		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
+			//On Place la pièce
+			self.grille[row][column] = piece
 
-	func isAbleToPlay(joueur : TJoueur) -> Bool
+			//On l'enlève de la collection du Joueur
+			joueur.piecePlayed(piece)
+		}
+		fatalError("Préconditions non respectées : 0 <= row <= 3 et 0 <= column <= 3")
+	
+
+	
+	func isAbleToPlay(joueur : TJoueur) -> Bool {
+	// On regarde s'il reste au moins 1 pièce dans la collection du joueur
+	var liste = joueur.getPiecesAvailable()
+	if (liste.isEmpty) {
+		return false
+	}
+	//On prends chacune des pièces une par une et on regarde toutes les positions si elle est jouable
+	var e : Int = 0
+	var canPlay : Bool = false
+	while(e < liste.count ){
+	for i in 0...3 {
+		for j in 0...3 {
+			if(isPlayable(joueur,liste[e],i,j) {
+				canPlay = true }
+		}
+	}		
+	e = e + 1	
+	}
+	return canPlay
+	}
+
+}
 
 	func getPieceGrille(row : Int, column : Int) -> TPiece? {
 		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
@@ -152,8 +184,20 @@ struct Quantik : TQuantik {
 	}
 
 
-	func gameOver(joueur1 : TJoueur, joueur2 : TJoueur) -> Int
-
+	func gameOver(joueur1 : TJoueur, joueur2 : TJoueur) -> Int {
+	//renvoie 1 si il y a 4 TPiece de Forme différentes sur une ligne, une colonne ou une région du TQuantik
+	// A FAIRE MAIS MANQUE AUTRE FONCTION ?
+	if(){
+	return 1
+	}
+	//sinon, renvoie 2 si il n'y a plus de TPiece disponibles à jouer dans les collections des deux TJoueur (i.e les deux collections sont vides)
+	else if(joueur1.getPiecesAvailable().isEmpty && joueur2.getPiecesAvailable().isEmpty){
+		return 2
+	}
+	//sinon, renvoie 0
+	else
+		return 0
+	}
 }
 
 
