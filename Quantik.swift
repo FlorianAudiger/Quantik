@@ -130,9 +130,13 @@ struct Quantik : TQuantik {
 	return res
 	}
 
-	func isAlreadyInRegion(piece :TPiece, region : Int) -> Bool
+	func isAlreadyInRegion(piece :TPiece, region : Int) -> Bool {
+	}
 
-	func regionFromXY(row : Int, column : Int) -> Int
+	func regionFromXY(row : Int, column : Int) -> Int {
+		var region : Int 
+		if 
+	}
 
 	func isPlayable(joueur : TJoueur, piece :TPiece, row : Int, column : Int) -> Bool
 
