@@ -55,7 +55,7 @@ protocol TQuantik {
 	//isAbleToPlay : TQuantik x TJoueur --> Bool
 	//renvoie True si il existe une TPiece disponible dans la collection du TJoueur pouvant être jouée, False sinon
 	//i.e : isPlayable(Q,TJoueur,TPiece,x,y) doit retourner True pour au moins une TPiece et une position x,y donnée
-	func isAbleToPlay(joeuur : TJoueur) -> Bool
+	func isAbleToPlay(joueur : TJoueur) -> Bool
 
 	//getPieceGrille : TQuantik x Int x Int--> (TPiece | Vide)
 	//renvoie la TPiece en position Int x Int de la grille du quantik si elle existe, renvoie Vide sinon
@@ -142,7 +142,7 @@ struct Quantik : TQuantik {
 
 	mutating func playPiece(piece :TPiece, row : Int, column : Int)
 
-	func isAbleToPlay(joeuur : TJoueur) -> Bool
+	func isAbleToPlay(joueur : TJoueur) -> Bool
 
 	func getPieceGrille(row : Int, column : Int) -> TPiece? {
 		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
