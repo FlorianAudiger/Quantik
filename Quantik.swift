@@ -77,7 +77,7 @@ struct Quantik : TQuantik {
 
 	private var _grid : [[Piece?]]
 
-	// _plateau[row][column]
+	// _grid[row][column]
 
 	init()
 	{
@@ -106,7 +106,9 @@ struct Quantik : TQuantik {
 		} else {
 			while columnT<4 && !res {
 				if let pieceTestee = _grid[row][columnT] {
-					res = (pieceTestee.forme() == piece.forme())
+					res = (pieceTestee.forme() == piece.forme && !(pieceTestee.couleur() == piece.couleur()))
+					}
+				columnT += 1
 				}
 			}
 		}
@@ -123,8 +125,9 @@ struct Quantik : TQuantik {
 		} else {
 			while rowT<4 && !res {
 				if let pieceTestee = _grid[rowT][column] {
-					res = (pieceTestee.forme() == piece.forme())
+					res = (pieceTestee.forme() == piece.forme() && !(pieceTestee.couleur() == piece.couleur()))
 				}
+				rowT += 1
 			}
 		}
 	return res
@@ -132,11 +135,16 @@ struct Quantik : TQuantik {
 
 	func isAlreadyInRegion(piece :TPiece, region : Int) -> Bool {
 		var res : Bool = false 
-		for rowT in 0...3 {
-			for columnT in 0...3 {
-				if (region = regionFromXY(row : rowT, column : columnT) && !res) {
-					if let pieceTestee = _grid[rowT][column] {
-						res = (pieceTestee.forme() == piece.forme())
+		if region<1 || region>4 
+		{
+			return fatalError("region en dehors de la grille")
+		} else {
+			for rowT in 0...3 {
+				for columnT in 0...3 {
+					if (region = regionFromXY(row : rowT, column : columnT) && !res) {
+						if let pieceTestee = _grid[rowT][column] {
+							res = (pieceTestee.forme() == piece.forme() && !(pieceTestee.couleur() == piece.couleur()))
+						}
 					}
 				}
 			}
@@ -163,12 +171,17 @@ struct Quantik : TQuantik {
 	}
 
 	func isPlayable(joueur : TJoueur, piece :TPiece, row : Int, column : Int) -> Bool {
-	return (!isOccupied(row: row,column: column) && !isAlreadyInRow(piece: piece,row: row) && !isAlreadyInColumn(piece: piece,column: column) && !isAlreadyInRegion(piece: piece,region: regionFromXY(row: row,column: column)) && joueur.isPieceAvailable(piece: piece))
+		return (!isOccupied(row: row,column: column) 
+			&& !isAlreadyInRow(piece: piece,row: row) 
+			&& !isAlreadyInColumn(piece: piece,column: column) 
+			&& !isAlreadyInRegion(piece: piece,region: regionFromXY(row: row,column: column)) 
+			&& joueur.isPieceAvailable(piece: piece))
+	}
 
 	mutating func playPiece(piece :TPiece, row : Int, column : Int) {
 		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
 			//On Place la pièce
-			self.grille[row][column] = piece
+			self._grid[row][column] = piece
 
 			//On l'enlève de la collection du Joueur
 			joueur.piecePlayed(piece: piece)
@@ -178,50 +191,130 @@ struct Quantik : TQuantik {
 
 	
 	func isAbleToPlay(joueur : TJoueur) -> Bool {
-	// On regarde s'il reste au moins 1 pièce dans la collection du joueur
-	var liste = joueur.getPiecesAvailable()
-	if (liste.isEmpty) {
-		return false
-	}
-	//On prends chacune des pièces une par une et on regarde toutes les positions si elle est jouable
-	var e : Int = 0
-	var canPlay : Bool = false
-	while(e < liste.count ){
-	for i in 0...3 {
-		for j in 0...3 {
-			if(isPlayable(joueur,liste[e],i,j) {
-				canPlay = true }
+		// On regarde s'il reste au moins 1 pièce dans la collection du joueur
+		var liste = joueur.getPiecesAvailable()
+		if (liste.isEmpty) {
+			return false
 		}
-	}		
-	e = e + 1	
-	}
-	return canPlay
+		//On prends chacune des pièces une par une et on regarde toutes les positions si elle est jouable
+		var e : Int = 0
+		var canPlay : Bool = false
+		while ((e < liste.count ) && !canPlay ) {
+			for i in 0...3 {
+				for j in 0...3 {
+					if(isPlayable(joueur,liste[e],i,j) {
+						canPlay = true }
+				}
+			}		
+			e = e + 1	
+		}
+		return canPlay
 	}
 
-}
 
 	func getPieceGrille(row : Int, column : Int) -> TPiece? {
 		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
-			return self.grille[row][column]
+			return self._grid[row][column]
 		}
 		fatalError("Préconditions non respectées : 0 <= row <= 3 et 0 <= column <= 3")
 	}
 
+	private func formeInRow (forme : Forme, row : Int) -> Bool {
+		// renvoie vrai lorsqu'on trouve la forme sur le ligne 
+		var columnT : Int = 0
+		var res : Bool = false
+		while columnT<4 && !res {
+			if let pieceTestee = _grid[row][columnT] {
+				res = (pieceTestee.forme() == forme )
+				}
+			columnT += 1
+			}
+		}
+		return res
+	}
+
+
+	private func formeInColumn (forme : Forme, column : Int) -> Bool {
+		// renvoie vrai lorsqu'on trouve la forme sur la colonne
+		var rowT : Int = 0
+		var res : Bool = false
+		while rowT<4 && !res {
+			if let pieceTestee = _grid[rowT][column] {
+				res = (pieceTestee.forme() == forme )
+				}
+			rowT += 1
+			}
+		}
+		return res
+	}
+
+	private func formeInRegion (forme : Forme, row : Int) -> Bool {
+		// renvoie vrai lorsqu'on trouve la forme dans la region
+	var res : Bool = false 
+		for rowT in 0...3 {
+			for columnT in 0...3 {
+				if (region = regionFromXY(row : rowT, column : columnT) && !res) {
+					if let pieceTestee = _grid[rowT][column] {
+						res = (pieceTestee.forme() == forme
+					}
+				}
+			}
+		}
+	return res
+	}
+
+	private func verifGameOver () -> Bool {
+		// renvoie vrai si il y a 4 pieces de formes différentes sur une ligne, une colonne ou dans une région
+		var res : Bool = false
+		var rowT : Int = 0
+		var columnT : Int = 0
+		var regionT : Int = 0 
+		// verification ligne
+		while (rowT < 4 && !res){
+			res = (formeInRow (forme : Forme.Sphere, row : rowT)
+				&& formeInRow (forme : Forme.Cube, row : rowT)
+				&& formeInRow (forme : Forme.Cone, row : rowT)
+				&& formeInRow (forme : Forme.Cylindre, row : rowT)
+				)
+			rowT += 1
+		}
+		// verification colonne
+		while (columnT < 4 && !res){
+			res = (formInColumn (forme : Forme.Sphere, column : columnT)
+				&& formInColumn (forme : Forme.Cube, column : columnT)
+				&& formInColumn (forme : Forme.Cone, column : columnT)
+				&& formInColumn (forme : Forme.Cylindre, column : columnT)
+				)
+			columnT += 1
+		}
+		// verification region 
+		while (regionT < 4 && !res){
+			res = (formInRegion (forme : Forme.Sphere, region : regionT)
+				&& formInRegion (forme : Forme.Cube, region : regionT)
+				&& formInRegion (forme : Forme.Cone, region : regionT)
+				&& formInRegion (forme : Forme.Cylindre, region : regionT)
+				)
+			regionT += 1
+		}
+		return res
+	}
+
+
+
 
 	func gameOver(joueur1 : TJoueur, joueur2 : TJoueur) -> Int {
-	//renvoie 1 si il y a 4 TPiece de Forme différentes sur une ligne, une colonne ou une région du TQuantik
-	// A FAIRE MAIS MANQUE AUTRE FONCTION ?
-	if(){
-	return 1
+		//renvoie 1 si il y a 4 TPiece de Forme différentes sur une ligne, une colonne ou une région du TQuantik
+		// A FAIRE MAIS MANQUE AUTRE FONCTION ?
+		if (verifGameOver() == true) {
+			return 1
+		}
+		//sinon, renvoie 2 si il n'y a plus de TPiece disponibles à jouer dans les collections des deux TJoueur (i.e les deux collections sont vides)
+		else if (joueur1.getPiecesAvailable().isEmpty && joueur2.getPiecesAvailable().isEmpty){
+			return 2
+		} else {
+		//sinon, renvoie 0
+			return 0
+		}
 	}
-	//sinon, renvoie 2 si il n'y a plus de TPiece disponibles à jouer dans les collections des deux TJoueur (i.e les deux collections sont vides)
-	else if(joueur1.getPiecesAvailable().isEmpty && joueur2.getPiecesAvailable().isEmpty){
-		return 2
-	}
-	//sinon, renvoie 0
-	else
-		return 0
-	}
-}
 
 
