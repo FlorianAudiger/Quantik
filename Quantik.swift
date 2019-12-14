@@ -131,11 +131,35 @@ struct Quantik : TQuantik {
 	}
 
 	func isAlreadyInRegion(piece :TPiece, region : Int) -> Bool {
+		var res : Bool = false 
+		for rowT in 0...3 {
+			for columnT in 0...3 {
+				if (region = regionFromXY(row : rowT, column : columnT) && !res) {
+					if let pieceTestee = _grid[rowT][column] {
+						res = (pieceTestee.forme() == piece.forme())
+					}
+				}
+			}
+		}
+	return res
 	}
 
 	func regionFromXY(row : Int, column : Int) -> Int {
 		var region : Int 
-		if 
+		if row-2 < 0 {
+			if column-2 < 0 {
+				region = 1
+			} else {
+				region = 2
+			}
+		} else {
+			if column-2 < 0 {
+				region = 3
+			} else {
+				region = 4
+			}
+		}
+		return region
 	}
 
 	func isPlayable(joueur : TJoueur, piece :TPiece, row : Int, column : Int) -> Bool {
