@@ -71,7 +71,7 @@ class Joueur : TJoueur {
 		return (self._listePiece.contains(piece))
 	}
 
-	mutating func piecePlayed(piece :ATPiece){
+	func piecePlayed(piece :ATPiece){
 	var i : Int = 0
 	while(_listePiece[i].forme() != piece.forme()){
 		i = i + 1
@@ -79,6 +79,3 @@ class Joueur : TJoueur {
 	_listePiece.remove(at: i)
 	}
 }
-	
-	
-

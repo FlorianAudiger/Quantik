@@ -3,7 +3,7 @@ enum Couleur : String {
 	case Sombre = "Sombre"
 }
 
-enum Forme : String, CaseIterable, Equatable {
+enum Forme : String, Equatable {
 	case Sphere = "Sphere"
 	case Cube = "Cube"
 	case Cone = "Cone"

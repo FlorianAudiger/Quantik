@@ -38,6 +38,6 @@ struct Piece : TPiece {
 extension Piece: Equatable {
     static func == (lhs: Piece, rhs: Piece) -> Bool {
         return
-            lhs.forme == rhs.forme 
+            lhs.forme() == rhs.forme() 
         }
 }
