@@ -5,7 +5,7 @@ func clear() {
 
 // Affichage de la grille du jeu
 // TQuantik : le jeu quantik
-func printGrille(quantik : TQuantik) {
+func printGrille(quantik : Quantik) {
 	var separator1 : Int = 0
 	print("\u{001B}[0;33m    0 1   2 3")
 	print("\u{001B}[0;37m   -----------")
@@ -64,14 +64,14 @@ func printGrille(quantik : TQuantik) {
 }
 
 // Création du jeu TQuantik
-var quantik : TQuantik = TQuantik()
+var quantik : Quantik = Quantik()
 
 // Création de deux joueurs --> joueurClair avec la couleur Couleur.Claire et joueurSombre avec la couleur Couleur.Sombre
-var joueurClair : TJoueur = TJoueur(couleur : Couleur.Claire)
-var joueurSombre : TJoueur = TJoueur(couleur : Couleur.Sombre)
+var joueurClair : Joueur = Joueur(couleur : Couleur.Claire)
+var joueurSombre : Joueur = Joueur(couleur : Couleur.Sombre)
 
 // Création d'une collection de 2 TJoueur
-var joueurs : [TJoueur] = [joueurClair, joueurSombre]
+var joueurs : [Joueur] = [joueurClair, joueurSombre]
 
 // Définir aléatoirement le TJoueur qui commence la partie : 0 correspond au joueurClair et 1 au joueurSombre
 // dans la collection joueurs
@@ -81,7 +81,7 @@ var current : Int = Int.random(in: 0...1)
 var warning : Bool = false
 
 // Continue la partie tant que la partie n'est pas fini et que le joueur courant peut jouer
-while quantik.gameOver() == 0 && quantik.isAbleToPlay(joueurs[current]) {
+while quantik.gameOver(joueur1: joueurClair, joueur2: joueurSombre) == 0 && quantik.isAbleToPlay(joueur: joueurs[current]) {
 	
 	// Variable booléenne pour définir si la saisie est bonne(true) ou non(false)
 	// pour la saisie de : pièce, ligne et colonne
@@ -97,7 +97,7 @@ while quantik.gameOver() == 0 && quantik.isAbleToPlay(joueurs[current]) {
 	var column : Int = 0
 
 	// Dictionnaire de Formes
-	let forms : [Int : String] = [1 : Forme.Sphere, 2 : Forme.Cube, 3 : Forme.Cone, 4 : Forme.Cylindre]
+	let forms : [Int : String] = [1 : Forme.Sphere.rawValue, 2 : Forme.Cube.rawValue, 3 : Forme.Cone.rawValue, 4 : Forme.Cylindre.rawValue]
 
 	// Affichage de la demande de saisies et récupération des saisies
 	repeat {
@@ -106,7 +106,7 @@ while quantik.gameOver() == 0 && quantik.isAbleToPlay(joueurs[current]) {
 		printGrille(quantik : quantik)
 
 		// Affichage lié aux informations de saisies du joueur
-		print("\u{001B}[0;37mAu tour du joueur : " + joueur[current].couleur())
+		print("\u{001B}[0;37mAu tour du joueur : " + joueurs[current].couleur().rawValue)
 		print("\u{001B}[0;37m1. Sphere : O")
 		print("\u{001B}[0;37m2. Cube : #")
 		print("\u{001B}[0;37m3. Cone : A")
@@ -176,21 +176,24 @@ while quantik.gameOver() == 0 && quantik.isAbleToPlay(joueurs[current]) {
 			if valuesOK {
 
 				// vérifie que c'est bien une forme
-				var formPiece : Forme 
+				var formPiece : Forme
 				if let tempForme = forms[pieceToPlay] {
-					formPiece = tempForme
-				}
+					formPiece = Forme(rawValue:tempForme)!
+					// Création de la TPiece avec la Couleur du TJoueur courant et la Forme de la TPiece
+					let piece : Piece = Piece(couleur : joueurs[current].couleur(), forme : formPiece)
 
-				// Création de la TPiece avec la Couleur du TJoueur courant et la Forme de la TPiece
-				var piece : TPiece = TPiece(couleur : joueur[current].couleur(), forme : formPiece)
-
-				// vérification que la piece TPiece peut être jouée à la position ligne : row et à la colonne : column
-				// si elle peut être jouée alors on place la pièce (playPiece) et enlève cette pièce de la collection de pièce du joueur courant
-				// sinon on affecte la variable warning à true et valuesOK à false afin de recommencer la saisie du TJoueur courant
-				if quantik.isPlayable(joueur : joueurs[current], piece : piece, row : row, column : column) {
-					quantik.playPiece(piece : piece, row : row, column : column)
-					joueurs[current].piecePlayed(piece : piece)
-				}	
+					// vérification que la piece TPiece peut être jouée à la position ligne : row et à la colonne : column
+					// si elle peut être jouée alors on place la pièce (playPiece) et enlève cette pièce de la collection de pièce du joueur courant
+					// sinon on affecte la variable warning à true et valuesOK à false afin de recommencer la saisie du TJoueur courant
+					if quantik.isPlayable(joueur : joueurs[current], piece : piece, row : row, column : column) {
+						quantik.playPiece(piece : piece, row : row, column : column, joueur : joueurs[current])
+						joueurs[current].piecePlayed(piece : piece)
+					}	
+					else { 
+						warning = true
+						valuesOK = false
+					}
+				} 
 				else { 
 					warning = true
 					valuesOK = false
@@ -211,7 +214,7 @@ while quantik.gameOver() == 0 && quantik.isAbleToPlay(joueurs[current]) {
 clear()
 
 // Défini l'état de la fin de partie
-if (quantik.gameOver == 2) {
+if (quantik.gameOver(joueur1: joueurClair, joueur2: joueurSombre) == 2) {
 	print("Match nul !")
 }
 else if current == 0 {

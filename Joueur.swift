@@ -39,7 +39,7 @@ class Joueur : TJoueur {
 	private var _listePiece : [ATPiece]
 
 	//FONCTION
-	init(couleur : Couleur) {
+	required init(couleur : Couleur) {
 
 		self._couleurJ = couleur
 

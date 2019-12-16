@@ -55,7 +55,7 @@ protocol TQuantik {
 	//ajoute la TPiece à la grille du quantik en position Int x Int
 	// 0 <= Int <= 3 (pour les deux Int en paramètres)
 	//le premier Int représente la ligne et le deuxième Int représente la colonne
-	mutating func playPiece(piece : ATPiece, row : Int, column : Int)
+	mutating func playPiece(piece : ATPiece, row : Int, column : Int, joueur : ATJoueur)
 
 	//isAbleToPlay : TQuantik x TJoueur --> Bool
 	//renvoie True si il existe une TPiece disponible dans la collection du TJoueur pouvant être jouée, False sinon
@@ -66,7 +66,7 @@ protocol TQuantik {
 	//renvoie la TPiece en position Int x Int de la grille du quantik si elle existe, renvoie Vide sinon
 	// 0 <= Int <= 3 (pour les deux Int en paramètres)
 	//le premier Int représente la ligne et le deuxième Int représente la colonne 
-	func getPieceGrille(row : Int, column : Int) -> TPiece?
+	func getPieceGrille(row : Int, column : Int) -> ATPiece?
 
 	//gameOver : TQuantik x TJoueur x TJoueur--> Int
 	//renvoie 1 si il y a 4 TPiece de Forme différentes sur une ligne, une colonne ou une région du TQuantik
@@ -78,7 +78,7 @@ protocol TQuantik {
 //si les pré-conditions ne sont pas validées, faire planter le programme 
 
 //TYPE
-struct Quantik : TQuantik {
+class Quantik : TQuantik {
 
 	typealias ATPiece = Piece
 	typealias ATJoueur = Joueur
@@ -87,7 +87,7 @@ struct Quantik : TQuantik {
 
 	// _grid[row][column]
 
-	init()
+	required init()
 	{
 		self._grid = [[Piece?]](repeating:[Piece?](repeating:nil,count:4),count:4)
 	}
@@ -179,7 +179,7 @@ struct Quantik : TQuantik {
 			&& joueur.isPieceAvailable(piece: piece))
 	}
 
-	mutating func playPiece(piece : ATPiece, row : Int, column : Int) {
+	func playPiece(piece : ATPiece, row : Int, column : Int, joueur : ATJoueur) {
 		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
 			//On Place la pièce
 			self._grid[row][column] = piece
@@ -188,10 +188,11 @@ struct Quantik : TQuantik {
 			joueur.piecePlayed(piece: piece)
 		}
 		fatalError("Préconditions non respectées : 0 <= row <= 3 et 0 <= column <= 3")
+	}
 	
 
 	
-	func isAbleToPlay(joueur : ATJoueur) -> Bool {
+	func isAbleToPlay(joueur : Joueur) -> Bool {
 		// On regarde s'il reste au moins 1 pièce dans la collection du joueur
 		var liste = joueur.getPiecesAvailable()
 		if (liste.isEmpty) {
@@ -303,7 +304,7 @@ struct Quantik : TQuantik {
 
 	func gameOver(joueur1 : ATJoueur, joueur2 : ATJoueur) -> Int {
 		//renvoie 1 si il y a 4 TPiece de Forme différentes sur une ligne, une colonne ou une région du TQuantik
-		// A FAIRE MAIS MANQUE AUTRE FONCTION ?
+
 		var res : Int = 0
 		if (verifGameOver() == true) {
 			res = 1
@@ -315,4 +316,5 @@ struct Quantik : TQuantik {
 		return res
 	}
 }
+
 
