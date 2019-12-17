@@ -55,7 +55,7 @@ protocol TQuantik {
 	//ajoute la TPiece à la grille du quantik en position Int x Int
 	// 0 <= Int <= 3 (pour les deux Int en paramètres)
 	//le premier Int représente la ligne et le deuxième Int représente la colonne
-	mutating func playPiece(piece : ATPiece, row : Int, column : Int, joueur : ATJoueur)
+	mutating func playPiece(piece : ATPiece, row : Int, column : Int)
 
 	//isAbleToPlay : TQuantik x TJoueur --> Bool
 	//renvoie True si il existe une TPiece disponible dans la collection du TJoueur pouvant être jouée, False sinon
@@ -179,15 +179,16 @@ class Quantik : TQuantik {
 			&& joueur.isPieceAvailable(piece: piece))
 	}
 
-	func playPiece(piece : ATPiece, row : Int, column : Int, joueur : ATJoueur) {
+	func playPiece(piece : ATPiece, row : Int, column : Int) {
 		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
 			//On Place la pièce
 			self._grid[row][column] = piece
 
 			//On l'enlève de la collection du Joueur
-			joueur.piecePlayed(piece: piece)
+			//joueur.piecePlayed(piece: piece)
+		} else {
+			fatalError("Préconditions non respectées : 0 <= row <= 3 et 0 <= column <= 3")
 		}
-		fatalError("Préconditions non respectées : 0 <= row <= 3 et 0 <= column <= 3")
 	}
 	
 
@@ -218,8 +219,9 @@ class Quantik : TQuantik {
 	func getPieceGrille(row : Int, column : Int) -> ATPiece? {
 		if row >= 0 && row <= 3 && column >= 0 && column <= 3 {
 			return self._grid[row][column]
+		} else {
+			fatalError("Préconditions non respectées : 0 <= row <= 3 et 0 <= column <= 3")
 		}
-		fatalError("Préconditions non respectées : 0 <= row <= 3 et 0 <= column <= 3")
 	}
 
 	func formeInRow (forme : Forme, row : Int) -> Bool {

@@ -7,15 +7,17 @@ func clear() {
 // TQuantik : le jeu quantik
 func printGrille(quantik : Quantik) {
 	var separator1 : Int = 0
+	var a : Int = 0
 	print("\u{001B}[0;33m    0 1   2 3")
 	print("\u{001B}[0;37m   -----------")
 	for i in 0...4 {
 		if (i == 2) {
 			print("\u{001B}[0;37m  |-----|-----|")
 			separator1 = 1
+			a = 1
 		}
 		else {
-			var numLigne : String = "\u{001B}[0;33m" + String(i)
+			var numLigne : String = "\u{001B}[0;33m" + String(i-a)
 			numLigne += " "
 			print(numLigne , terminator : "")
 			print("\u{001B}[0;37m| ", terminator : "")
@@ -186,7 +188,7 @@ while quantik.gameOver(joueur1: joueurClair, joueur2: joueurSombre) == 0 && quan
 					// si elle peut être jouée alors on place la pièce (playPiece) et enlève cette pièce de la collection de pièce du joueur courant
 					// sinon on affecte la variable warning à true et valuesOK à false afin de recommencer la saisie du TJoueur courant
 					if quantik.isPlayable(joueur : joueurs[current], piece : piece, row : row, column : column) {
-						quantik.playPiece(piece : piece, row : row, column : column, joueur : joueurs[current])
+						quantik.playPiece(piece : piece, row : row, column : column)
 						joueurs[current].piecePlayed(piece : piece)
 					}	
 					else { 
