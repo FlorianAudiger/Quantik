@@ -268,7 +268,7 @@ class Quantik : TQuantik {
 	return res
 	}
 
-	func verifGameOver () -> Bool {
+	private func verifGameOver () -> Bool {
 		// renvoie vrai si il y a 4 pieces de formes différentes sur une ligne, une colonne ou dans une région
 		var res : Bool = false
 		var rowT : Int = 0
